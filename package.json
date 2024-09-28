@@ -18,5 +18,8 @@
     "express": "^4.21.0",
     "hash": "^0.2.1",
     "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.2"
   }
 }

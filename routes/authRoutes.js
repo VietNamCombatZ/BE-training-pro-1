@@ -12,7 +12,6 @@ class authRoutes {
     this.router.post("/login", authController.login); 
     this.router.post("/register", authController.register); 
 
-    
     this.router.get("/me", authMiddleware.verifyToken, authController.me);
   }
 }

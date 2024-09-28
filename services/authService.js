@@ -2,7 +2,8 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 class authService {
-  constructor() {
+
+    constructor() {
     this.users = []; 
   }
 
