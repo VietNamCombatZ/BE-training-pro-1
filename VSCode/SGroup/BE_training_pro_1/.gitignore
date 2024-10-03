@@ -1,2 +1,10 @@
-/node_modules
-.DS_STORE
+# Ignore .DS_Store files
+.DS_Store
+../../../.DS_Store
+../.DS_Store
+
+# Ignore .zprofile
+../../../.zprofile
+
+# Ignore a specific directory
+"File cài đặt/"
