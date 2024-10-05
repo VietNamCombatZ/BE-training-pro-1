@@ -1,9 +1,29 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
+import UserModel from "../model/userModel";
 import pool from "../config/databaseConfig"
 
 
 class authMiddleware {
+  async checkInput(req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const { email, pass } = req.body;
+    const user = await UserModel.getUserByEmail(email);
+    if (user != undefined) {
+      throw "User already exists";
+    }
+    next();
+
+  } catch (err) {
+    console.log("error at validateUser middleware:", err);
+    res.status(404).send("Internal server error");
+  }
+  
+  
+  
+  }
+
+
     async validateUser(req: Request, res: Response, next: NextFunction): Promise<void>{
       try {
         const { email, pass } = req.body;
