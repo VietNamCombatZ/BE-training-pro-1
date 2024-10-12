@@ -21,13 +21,13 @@ class UserModel {
       const query = "SELECT id, email, pass FROM user_db WHERE email = ?";
       const value = [email];
 
-      const rows: any = await connection.query(query, value); // Ensure TypeScript knows it's an array of Users
+      const rows: User[] | undefined = await connection.query(query, value)[0]; // Ensure TypeScript knows it's an array of Users
       connection.release(); // Release the connection use 
 
       console.log(rows); // Debugging output
 
       // If no rows were returned, return undefined
-      if (rows.length === 0) {
+      if (rows.length== 0) {
         return undefined; // No user found
       }
 

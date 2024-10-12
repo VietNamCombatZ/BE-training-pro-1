@@ -8,6 +8,7 @@ class authMiddleware {
   async checkInput(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
     const { email, pass } = req.body;
+    // console.log({ email, pass });
     const user = await UserModel.getUserByEmail(email);
     if (user != undefined) {
       throw "User already exists";
@@ -27,6 +28,7 @@ class authMiddleware {
     async validateUser(req: Request, res: Response, next: NextFunction): Promise<void>{
       try {
         const { email, pass } = req.body;
+        console.log({ email, pass });
         const conn = await pool.getConnection();
         const [rows] = await conn.query(
           "Select * from user_db where email = ?, pass = ?",

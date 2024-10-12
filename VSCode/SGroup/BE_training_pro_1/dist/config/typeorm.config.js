@@ -1,9 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const dotenv_1 = require("dotenv");
-const typeorm_1 = require("typeorm");
-(0, dotenv_1.config)();
-exports.default = new typeorm_1.DataSource({
+import { config } from "dotenv";
+import { DataSource } from "typeorm";
+config();
+export default new DataSource({
     type: "mysql",
     host: process.env.DB_HOST,
     port: 3306,

@@ -1,13 +1,16 @@
 {
   "name": "buoi_2",
   "version": "1.0.0",
+  "type": "module",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "tsx watch --clear-screen=false src/app.ts",
     "build": "tsc",
-    "start": "node src/index.js",
-    "start1": "node dist/index.js",
+    "start": "node src/index.ts",
+    "start1": "node dist/app.js",
+    "start2": "nodemon --exec ts-node src/app.ts",
     "watch": "tsc --watch",
     "typeorm": "typeorm-ts-node-commonjs",
     "typeorm:run-migrations": "npm run build && npm run typeorm migration:run -- -d ./dist/config/typeorm.config.js",
@@ -24,7 +27,8 @@
     "express": "^4.21.0",
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^6.9.15",
-    "nodemon": "^3.1.7"
+    "nodemon": "^3.1.7",
+    "tsx": "^4.19.1"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
