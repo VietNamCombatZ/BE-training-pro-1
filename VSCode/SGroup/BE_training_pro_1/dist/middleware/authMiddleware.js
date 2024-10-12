@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import UserModel from "../model/userModel.js";
+import HashUtils from "../utils/hashUtils.js";
 import pool from "../config/databaseConfig.js";
 class authMiddleware {
     async checkInput(req, res, next) {
@@ -21,8 +22,9 @@ class authMiddleware {
         try {
             const { email, pass } = req.body;
             console.log({ email, pass });
+            const hashedPass = await HashUtils.hashPassword(pass);
             const conn = await pool.getConnection();
-            const [rows] = await conn.query("Select * from user_db where email = ?, pass = ?", [email, pass]);
+            const [rows] = await conn.query("Select * from user_db where email = ? and pass = ?", [email, hashedPass]);
             conn.release();
             if (Array.isArray(rows) && rows.length > 0) {
                 req.user = rows[0];

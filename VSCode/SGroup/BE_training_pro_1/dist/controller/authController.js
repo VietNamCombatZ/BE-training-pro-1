@@ -35,6 +35,7 @@ class authController {
             const { email, pass } = req.body;
             // Call the authService to get the login token
             const loginToken = await AuthService.login(email, pass);
+            console.log("check", loginToken);
             // If loginToken is valid, return success response
             if (loginToken) {
                 res.status(200).json({
@@ -60,6 +61,7 @@ class authController {
     async forgotPass(req, res) {
         try {
             const { email } = req.body;
+            console.log("start to enter forgotPass service");
             const check = await AuthService.forgotPassword(email);
             console.log(check);
             if (check) {
@@ -89,8 +91,9 @@ class authController {
                 res.status(404).send("invalid token");
                 return;
             }
-            const { email, password } = req.body;
-            const check = await AuthService.resetPassword(email, password, token);
+            const { email, newpass } = req.body;
+            console.log("resetPass body: ",{ email, newpass });
+            const check = await AuthService.resetPassword(email, newpass, token);
             if (check) {
                 res.status(200).json({
                     success: true,

@@ -15,9 +15,9 @@ class UserModel {
             const connection = await pool.getConnection(); // Get a connection
             const query = "SELECT id, email, pass FROM user_db WHERE email = ?";
             const value = [email];
-            const rows = await connection.query(query, value)[0]; // Ensure TypeScript knows it's an array of Users
+            const [rows] = await connection.query(query, value); // Ensure TypeScript knows it's an array of Users
             connection.release(); // Release the connection use 
-            console.log(rows); // Debugging output
+            console.log("GetuserbyEmail",rows); // Debugging output
             // If no rows were returned, return undefined
             if (rows.length == 0) {
                 return undefined; // No user found
@@ -47,10 +47,14 @@ class UserModel {
     async setPasswordToken(passwordResetToken, passwordResetExpiration, email) {
         try {
             const connection = await pool.getConnection();
-            const query = `UPDATE users_db SET PasswordResetToken = ?, PasswordResetExpiration = ? WHERE Email = ?`;
+            console.log("connection established"); 
+            const query = `UPDATE user_db SET PasswordResetToken = ?, PasswordResetExpiration = ? WHERE Email = ?`;
             const valueArray = [passwordResetToken, passwordResetExpiration, email];
+            console.log("start update query");
             await connection.query(query, valueArray);
+            console.log("end update query");
             connection.release(); // Ensure connection is released
+            console.log("Password Reset Token set successfully");
             return true;
         }
         catch (error) {
@@ -60,7 +64,7 @@ class UserModel {
     async checkTokenPassword(email, passwordResetToken) {
         try {
             const connection = await pool.getConnection();
-            const query = `SELECT * FROM users_db WHERE Email = ? AND PasswordResetToken = ? AND PasswordResetExpiration >= ?`;
+            const query = `SELECT * FROM user_db WHERE Email = ? AND PasswordResetToken = ? AND PasswordResetExpiration >= ?`;
             const values = [email, passwordResetToken, new Date(Date.now())];
             const [rows] = await connection.query(query, values);
             connection.release();
@@ -73,7 +77,7 @@ class UserModel {
     async updatePassword(email, password) {
         try {
             const connection = await pool.getConnection();
-            const query = `UPDATE users_db SET Password = ? WHERE Email = ?`;
+            const query = `UPDATE user_db SET pass = ? WHERE email = ?`;
             const valueArray = [password, email];
             await connection.query(query, valueArray);
             connection.release();
