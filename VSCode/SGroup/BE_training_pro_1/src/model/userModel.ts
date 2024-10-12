@@ -77,7 +77,7 @@ class UserModel {
   ): Promise<any> {
     try {
       const connection: PoolConnection = await pool.getConnection();
-      const query = `SELECT * FROM users_db WHERE Email = ? AND PasswordResetToken = ? AND PasswordResetExpiration >= ?`;
+      const query = `SELECT * FROM user_db WHERE email = ? AND PasswordResetToken = ? AND PasswordResetExpiration >= ?`;
       const values = [email, passwordResetToken, new Date(Date.now())];
 
       const [rows]: any[] = await connection.query(query, values);
@@ -90,7 +90,7 @@ class UserModel {
   async updatePassword(email: string, password: string): Promise<boolean> {
     try {
       const connection: PoolConnection = await pool.getConnection();
-      const query = `UPDATE users_db SET Password = ? WHERE Email = ?`;
+      const query = `UPDATE user_db SET pass = ? WHERE email = ?`;
       const valueArray = [password, email];
 
       await connection.query(query, valueArray);

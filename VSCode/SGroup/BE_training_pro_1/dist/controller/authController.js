@@ -9,7 +9,7 @@ class authController {
     async register(req, res) {
         try {
             const { email, pass } = req.body;
-            const conn = await pool.getConnection();
+            // const conn = await pool.getConnection();
             const check = await AuthService.register(email, pass);
             if (!check) {
                 res.status(400).json({

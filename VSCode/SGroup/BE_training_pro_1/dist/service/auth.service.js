@@ -30,7 +30,7 @@ class AuthService {
             if (user == undefined) {
                 throw "invalid login email";
             }
-            const hashedPass = await HashUtils.hashPassword(pass);
+            
             if (user.pass == null) {
                 throw ("invalid pass");
             }

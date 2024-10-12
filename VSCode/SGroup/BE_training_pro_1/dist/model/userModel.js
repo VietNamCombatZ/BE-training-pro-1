@@ -64,7 +64,7 @@ class UserModel {
     async checkTokenPassword(email, passwordResetToken) {
         try {
             const connection = await pool.getConnection();
-            const query = `SELECT * FROM user_db WHERE Email = ? AND PasswordResetToken = ? AND PasswordResetExpiration >= ?`;
+            const query = `SELECT * FROM user_db WHERE email = ? AND PasswordResetToken = ? AND PasswordResetExpiration >= ?`;
             const values = [email, passwordResetToken, new Date(Date.now())];
             const [rows] = await connection.query(query, values);
             connection.release();

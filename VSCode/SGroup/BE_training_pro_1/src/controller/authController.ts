@@ -12,7 +12,7 @@ class authController {
   async register(req: Request, res: Response): Promise<void> {
     try {
       const { email, pass } = req.body;
-      const conn = await pool.getConnection();
+      // const conn = await pool.getConnection();
       const check = await AuthService.register(email, pass);
       if (!check) {
         res.status(400).json({
@@ -97,10 +97,10 @@ class authController {
         res.status(404).send("invalid token");
         return;
       }
-      const { email, password } = req.body;
+      const { email, newpass} = req.body;
       const check: boolean = await AuthService.resetPassword(
         email,
-        password,
+        newpass,
         token
       );
 
