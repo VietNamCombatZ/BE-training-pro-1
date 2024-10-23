@@ -1,46 +1,44 @@
 {
-  "name": "buoi_2",
+  "name": "ts-be",
   "version": "1.0.0",
-  "type": "module",
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev": "tsx watch --clear-screen=false src/index.ts | pino-pretty",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "tsx watch --clear-screen=false src/app.ts",
     "build": "tsc",
-    "start": "node src/index.ts",
-    "start1": "node dist/app.js",
-    "start2": "nodemon --exec ts-node src/app.ts",
+    "start": "node dist/index.js",
+    "start1": "ts-node src/index.ts",
     "watch": "tsc --watch",
     "typeorm": "typeorm-ts-node-commonjs",
-    "typeorm:run-migrations": "npm run build && npm run typeorm migration:run -- -d ./dist/config/typeorm.config.js",
-    "typeorm:generate-migration": "npm run build && npm run typeorm -- -d ./dist/config/typeorm.config.js migration:generate ./src/migrations/$npm_config_name",
-    "typeorm:create-migration": "npm run build && npm run typeorm -- migration:create ./src/migrations/$npm_config_name",
-    "typeorm:revert-migration": "npm build && npm run typeorm -- -d ./dist/config/typeorm.config.js migration:revert"
+    "typeorm:run-migrations": "npm run typeorm migration:run -- -d ./src/config/typeorm.config.ts", 
+    "typeorm:generate-migration":"npm run typeorm -- -d ./src/config/typeorm.config.ts migration:generate ./src/migrations/$npm_config_name",
+    "typeorm:create-migration": "npm run typeorm -- migration:create ./src/migrations/$npm_config_name",
+    "typeorm:revert-migration": "npm run typeorm -- -d ./src/config/typeorm.config.ts migration:revert"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "datasource": "^0.0.1",
-    "dotenv": "^16.4.5",
-    "express": "^4.21.0",
-    "jsonwebtoken": "^9.0.2",
-    "nodemailer": "^6.9.15",
-    "nodemon": "^3.1.7",
-    "tsx": "^4.19.1"
-  },
   "devDependencies": {
+    "nodemon": "^3.1.7",
+    "typescript": "^5.6.2"
+  },
+  "dependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/bcryptjs": "^2.4.6",
     "@types/express": "^5.0.0",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^22.7.4",
-    "@types/nodemailer": "^6.4.16",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "http-status-codes": "^2.3.0",
+    "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.11.3",
+    "pino": "^9.4.0",
+    "pino-pretty": "^11.2.2",
     "ts-node": "^10.9.2",
-    "ts-node-dev": "^2.0.0",
-    "typeorm": "^0.3.20",
-    "typescript": "^5.6.2"
+    "tsx": "^4.19.1",
+    "typeorm": "^0.3.20"
   }
 }

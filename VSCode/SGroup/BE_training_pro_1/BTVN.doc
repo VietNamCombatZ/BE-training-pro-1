@@ -1,0 +1,5 @@
+1/ BTVN t7 12-10-2024
+- Làm 3 quyền user, admin, author
+- admin: full quyền
+- user: chỉ đọc
+- author: sửa chính của bản thân và đọc       

@@ -1,36 +1,24 @@
 {
   "compilerOptions": {
-    "module": "ESNext",
-    "target": "ESNext",
-    "moduleResolution": "node",
+    "outDir": "./dist",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "target": "es6",
+    "module": "commonjs",
+    "baseUrl": ".",
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "allowSyntheticDefaultImports": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "noEmit": false, // Change this to false
-    // "allowImportingTsExtensions": true,
+    "strict": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "noPropertyAccessFromIndexSignature": false,
+    "strictPropertyInitialization": false,
+    "types": ["node"] // Remove trailing comma here
   },
-  "ts-node": {
-    "esm": true
-  },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "*/.spec.ts"]
+  "exclude": ["node_modules"],
+  "include": ["src/**/*.ts", "typeorm.config.ts"]
 }
-
-// {
-//   "compilerOptions": {
-//     "outDir": "./dist",
-//     "rootDir": "./src",
-//     "target": "ES6",
-//     "module": "commonjs",
-//     "esModuleInterop": true,
-//     "skipLibCheck": true
-
-//   },
-//   "include": ["src/**/*"],
-//   "exclude": ["node_modules"]
-// }
