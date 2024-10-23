@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { AuthController } from '../auth/auth.controller';
+import  authenticateJWT  from '../../middleware/authencation';
 
 const authRouter = Router();
 
@@ -13,7 +14,7 @@ authRouter.get('/user/:id', AuthController.getUser);
 
 
 
-// authRouter.post('/create-post', AuthController.createPost);
+authRouter.post('/create-post',authenticateJWT , AuthController.createPost);
 
 authRouter.post('/add-admin-to-DB', AuthController.addAdmintoDB);
 

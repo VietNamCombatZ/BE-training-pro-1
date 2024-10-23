@@ -6,6 +6,10 @@ import { Permission } from "../../model/permission.entity";
 import {permissionRepository} from "../../api/user/permissionRepository";
 import { Role } from "../../model/role.entity";
 import { roleRepository } from "../../api/user/roleRepository";
+import {Post} from "../../model/post.entity";
+import {postRepository} from "../../api/user/postRepository";
+
+
 import {ServiceResponse,ResponseStatus,} from "../../services/serviceResponse";
 import { StatusCodes } from "http-status-codes";
 import { generateJwt } from "../../services/jwtService";
@@ -87,8 +91,8 @@ export const authService = {
       }
 
       const token: Token = {
-        accessToken: generateJwt({ userId: user.id }),
-        refreshToken: generateJwt({ userId: user.id }),
+        accessToken: generateJwt({ userId: user.id, username: user.username }),
+        refreshToken: generateJwt({ userId: user.id, username: user.username }),
         expiresIn: calculateUnixTime(process.env.JWT_EXPIRES_IN || "1h"),
         tokenType: "Bearer",
       };
@@ -98,10 +102,9 @@ export const authService = {
         accessTokenExpireAt: token.expiresIn,
         refreshToken: token.refreshToken,
         refreshTokenExpireAt: token.expiresIn,
-        
       };
 
-      const addToken = await userRepository.addTokenAsync(user.id,tokenData );
+      const addToken = await userRepository.addTokenAsync(user.id, tokenData);
 
       return new ServiceResponse<Token>(
         ResponseStatus.Success,
@@ -154,7 +157,9 @@ export const authService = {
   ): Promise<ServiceResponse<string | null>> => {
     try {
       console.log("start permissionRepo:", permissionData); //permissionData is an array, need to destructure
-      const permission = await permissionRepository.addPermissionAsync(permissionData);
+      const permission = await permissionRepository.addPermissionAsync(
+        permissionData
+      );
       console.log("End permissionRepo", permission);
       if (!permission) {
         return new ServiceResponse(
@@ -171,7 +176,9 @@ export const authService = {
         StatusCodes.OK
       );
     } catch (ex) {
-      const errorMessage = `Error adding permission to DB: ${(ex as Error).message}`;
+      const errorMessage = `Error adding permission to DB: ${
+        (ex as Error).message
+      }`;
       return new ServiceResponse(
         ResponseStatus.Failed,
         errorMessage,
@@ -259,5 +266,36 @@ export const authService = {
         StatusCodes.INTERNAL_SERVER_ERROR
       );
     }
-  }
+  },
+  createPost: async (
+    postData: Post
+  ): Promise<ServiceResponse<Post | null>> => {
+    try {
+      console.log("start post create", postData);
+      const post = await postRepository.createPostAsync(postData);
+      console.log("end post create", post);
+      if (!post) {
+        return new ServiceResponse(
+          ResponseStatus.Failed,
+          "Error creating post",
+          null,
+          StatusCodes.INTERNAL_SERVER_ERROR
+        );
+      }
+      return new ServiceResponse<Post>(
+        ResponseStatus.Success,
+        "Post created",
+        post,
+        StatusCodes.OK
+      );
+    } catch (ex) {
+      const errorMessage = `Error creating post: ${(ex as Error).message}`;
+      return new ServiceResponse(
+        ResponseStatus.Failed,
+        errorMessage,
+        null,
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
+  },
 };

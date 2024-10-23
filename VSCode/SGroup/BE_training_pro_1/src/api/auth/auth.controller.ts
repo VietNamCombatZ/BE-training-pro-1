@@ -97,5 +97,23 @@ async addPermissiontoDB(req: Request, res: Response) {
             message: errorMessage,
             data: null,
           });
+        }},
+    async createPost(req: Request, res: Response) {
+        
+        try {
+          const postData = req.body;
+          console.log("check data", postData);
+          const serviceResponse = await authService.createPost(postData);
+          res.status(StatusCodes.CREATED).json(serviceResponse);
+        } catch (error) {
+          const errorMessage = `Error creating post: ${
+            (error as Error).message
+          }`;
+
+          res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            status: ResponseStatus.Failed,
+            message: errorMessage,
+            data: null,
+          });
         }}
 };
