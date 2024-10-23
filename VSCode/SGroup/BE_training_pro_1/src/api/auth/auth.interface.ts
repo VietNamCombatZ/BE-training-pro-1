@@ -9,6 +9,11 @@ interface Token {
     tokenType: string;
 }
 
+interface CreateRolePermissionRequest {
+  roleId: string;
+  permissions: { id: string }[]; // Array of permissions by ID
+}
+
   
-export type { Login, Token };
+export type { Login, Token,CreateRolePermissionRequest };
   

@@ -15,4 +15,7 @@ export const permissionRepository = dataSource.getRepository(Permission).extend(
   async findByNameAsync(name: string | undefined): Promise<Permission| null> {
     return this.findOneBy({ name });
   },
+  findByIdAsync(id: string): Promise<Permission | null> {
+    return this.findOneBy({ id });
+  }
 });

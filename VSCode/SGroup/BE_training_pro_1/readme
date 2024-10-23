@@ -1,4 +1,7 @@
 - "typeorm:generate-migration":"npm run typeorm -- -d ./src/config/typeorm.config.ts migration:generate ./src/migrations/$npm_config_name"
-add --name=NameofFileToGenerate
+add --name="NameofFileToGenerate"
+example:
+npm run typeorm:generate-migration --name=CreateNewTable
+npm run typeorm:run-migration
 - Same with other migration script
 - Always define type of collum in typeORM

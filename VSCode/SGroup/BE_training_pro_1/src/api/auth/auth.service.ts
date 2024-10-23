@@ -13,7 +13,7 @@ import {postRepository} from "../../api/user/postRepository";
 import {ServiceResponse,ResponseStatus,} from "../../services/serviceResponse";
 import { StatusCodes } from "http-status-codes";
 import { generateJwt } from "../../services/jwtService";
-import { Login, Token } from "../auth/auth.interface";
+import { Login, Token, CreateRolePermissionRequest } from "../auth/auth.interface";
 import { calculateUnixTime } from "../../services/caculateDatetime";
 
 export const authService = {
@@ -91,17 +91,17 @@ export const authService = {
       }
 
       const token: Token = {
-        accessToken: generateJwt({ userId: user.id, username: user.username }),
-        refreshToken: generateJwt({ userId: user.id, username: user.username }),
+        accessToken: generateJwt({ id: user.id, username: user.username }),
+        refreshToken: generateJwt({ id: user.id, username: user.username }),
         expiresIn: calculateUnixTime(process.env.JWT_EXPIRES_IN || "1h"),
         tokenType: "Bearer",
       };
 
       const tokenData = {
         accessToken: token.accessToken,
-        accessTokenExpireAt: token.expiresIn,
+        accessTokenExpireAt: new Date(token.expiresIn*1000),
         refreshToken: token.refreshToken,
-        refreshTokenExpireAt: token.expiresIn,
+        refreshTokenExpireAt: new Date(token.expiresIn*1000),
       };
 
       const addToken = await userRepository.addTokenAsync(user.id, tokenData);
@@ -271,8 +271,25 @@ export const authService = {
     postData: Post
   ): Promise<ServiceResponse<Post | null>> => {
     try {
-      console.log("start post create", postData);
-      const post = await postRepository.createPostAsync(postData);
+      
+      const userId = postData.user.id;
+      
+      const user = await userRepository.findOne({ where: { id: userId } });
+      if (!user) {
+        return new ServiceResponse(
+          ResponseStatus.Failed,
+          "User not found",
+          null,
+          StatusCodes.NOT_FOUND
+        );
+      }
+
+
+      const post = await postRepository.createPostAsync({
+        title: postData.title,
+        content: postData.content,
+        user: user,
+      });
       console.log("end post create", post);
       if (!post) {
         return new ServiceResponse(
@@ -298,4 +315,159 @@ export const authService = {
       );
     }
   },
+
+  addPermissiontoRole: async (permissionData: any): Promise<ServiceResponse<CreateRolePermissionRequest | null>> => {
+  try {
+    const role = await roleRepository.findByNameAsync(permissionData.roleName);
+    if (!role) {
+      return new ServiceResponse(
+        ResponseStatus.Failed,
+        "Role not found",
+        null,
+        StatusCodes.NOT_FOUND
+      );
+    }
+
+    const permissions = await permissionRepository.findByNameAsync(permissionData.permissionName);
+    if (!permissions) {
+      return new ServiceResponse(
+        ResponseStatus.Failed,
+        "Permission not found",
+        null,
+        StatusCodes.NOT_FOUND
+      );
+    }
+
+    // const rolePermissions = await roleRepository.addPermissionToRoleAsync(role, permissions);
+    // if (!rolePermissions) {
+    //   return new ServiceResponse(
+    //     ResponseStatus.Failed,
+    //     "Error adding permission to role",
+    //     null,
+    //     StatusCodes.INTERNAL_SERVER_ERROR
+    //   );
+    // }
+    const updatedRole = await roleRepository.addPermissionToRoleAsync(
+      role,
+      permissions
+    );
+    if (!updatedRole) {
+      return new ServiceResponse(
+        ResponseStatus.Failed,
+        "Error adding permission to role",
+        null,
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
+
+    // Create the response object matching CreateRolePermissionRequest
+    const response: CreateRolePermissionRequest = {
+      roleId: updatedRole.id, // Assuming updatedRole contains the role ID
+      permissions: updatedRole.permissions.map((permission) => ({
+        id: permission.id,
+      })), // Map permissions to the expected structure
+    };
+
+    return new ServiceResponse<CreateRolePermissionRequest>(
+      ResponseStatus.Success,
+      "Permission added to role",
+      response,
+      StatusCodes.OK
+    );
+  } catch (ex) {
+    const errorMessage = `Error adding permission to role: ${(ex as Error).message}`;
+    return new ServiceResponse(
+      ResponseStatus.Failed,
+      errorMessage,
+      null,
+      StatusCodes.INTERNAL_SERVER_ERROR
+    );
+  }
+},
+  updateRoletoUser: async (roleData: any): Promise<ServiceResponse<User | null>> => {
+    try {
+      const user = await userRepository.findByIdAsync(roleData.userId);
+      if (!user) {
+        return new ServiceResponse(
+          ResponseStatus.Failed,
+          "User not found",
+          null,
+          StatusCodes.NOT_FOUND
+        );
+      }
+
+      const role = await roleRepository.findByNameAsync(roleData.roleName);
+      if (!role) {
+        return new ServiceResponse(
+          ResponseStatus.Failed,
+          "Role not found",
+          null,
+          StatusCodes.NOT_FOUND
+        );
+      }
+
+      const updatedUser = await userRepository.updateRoleToUserAsync(user, role);
+      if (!updatedUser) {
+        return new ServiceResponse(
+          ResponseStatus.Failed,
+          "Error adding role to user",
+          null,
+          StatusCodes.INTERNAL_SERVER_ERROR
+        );
+      }
+
+      return new ServiceResponse<User>(
+        ResponseStatus.Success,
+        "Role added to user",
+        updatedUser,
+        StatusCodes.OK
+      );
+    } catch (ex) {
+      const errorMessage = `Error adding role to user: ${(ex as Error).message}`;
+      return new ServiceResponse(
+        ResponseStatus.Failed,
+        errorMessage,
+        null,
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
+  },
+  deleteUser: async (userId: string): Promise<ServiceResponse<string | null>> => {
+    try {
+      const user = await userRepository.findByIdAsync(userId);
+      if (!user) {
+        return new ServiceResponse(
+          ResponseStatus.Failed,
+          "User not found",
+          null,
+          StatusCodes.NOT_FOUND
+        );
+      }
+
+      const deletedUser = await userRepository.deleteUserAsync(user.id);
+      if (!deletedUser) {
+        return new ServiceResponse(
+          ResponseStatus.Failed,
+          "Error deleting user",
+          null,
+          StatusCodes.INTERNAL_SERVER_ERROR
+        );
+      }
+
+      return new ServiceResponse<string>(
+        ResponseStatus.Success,
+        "User deleted",
+        "user",
+        StatusCodes.OK
+      );
+    } catch (ex) {
+      const errorMessage = `Error deleting user: ${(ex as Error).message}`;
+      return new ServiceResponse(
+        ResponseStatus.Failed,
+        errorMessage,
+        null,
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
 };

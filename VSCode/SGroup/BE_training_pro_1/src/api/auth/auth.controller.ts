@@ -8,7 +8,7 @@ import { Login } from "./auth.interface";
 export const AuthController = {
   async register(req: Request, res: Response) {
     const userData: User = req.body;
-    console.log("check data",userData);
+    console.log("check data", userData);
     try {
       const serviceResponse = await authService.register(userData);
       res.status(StatusCodes.CREATED).json(serviceResponse);
@@ -37,83 +37,141 @@ export const AuthController = {
     }
   },
   async getUser(req: Request, res: Response) {
-    const userId  = req.params.id;
+    const userId = req.params.id;
     try {
-        const serviceResponse = await authService.getUser(userId);
-        res.status(serviceResponse.code).json(serviceResponse);
+      const serviceResponse = await authService.getUser(userId);
+      res.status(serviceResponse.code).json(serviceResponse);
     } catch (error) {
-        const errorMessage = `Error getting user: ${(error as Error).message}`;
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-            status: ResponseStatus.Failed,
-            message: errorMessage,
-            data: null,
-        });
+      const errorMessage = `Error getting user: ${(error as Error).message}`;
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        status: ResponseStatus.Failed,
+        message: errorMessage,
+        data: null,
+      });
     }
-},
+  },
 
-async addPermissiontoDB(req: Request, res: Response) {
+  async addPermissiontoDB(req: Request, res: Response) {
     try {
       const permissionData = req.body; //data type [] if value passing is array, need destructuring
       console.log(permissionData);
-        const serviceResponse = await authService.addPermissiontoDB(permissionData);
-        res.status(serviceResponse.code).json(serviceResponse);
+      const serviceResponse = await authService.addPermissiontoDB(
+        permissionData
+      );
+      res.status(serviceResponse.code).json(serviceResponse);
     } catch (error) {
-        const errorMessage = `Error adding permission to DB: ${(error as Error).message}`;
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-            status: ResponseStatus.Failed,
-            message: errorMessage,
-            data: null,
-        });
-    }} ,
+      const errorMessage = `Error adding permission to DB: ${
+        (error as Error).message
+      }`;
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        status: ResponseStatus.Failed,
+        message: errorMessage,
+        data: null,
+      });
+    }
+  },
 
-    async addRoletoDB(req: Request, res: Response) {
-        try {
-          const roleData = req.body; //data type [] if value passing is array, need destructuring
-          console.log(roleData);
-            const serviceResponse = await authService.addRoletoDB(roleData);
-            res.status(serviceResponse.code).json(serviceResponse);
-        } catch (error) {
-            const errorMessage = `Error adding role to DB: ${(error as Error).message}`;
-            res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-                status: ResponseStatus.Failed,
-                message: errorMessage,
-                data: null,
-            });
-        }},
+  async addRoletoDB(req: Request, res: Response) {
+    try {
+      const roleData = req.body; //data type [] if value passing is array, need destructuring
+      console.log(roleData);
+      const serviceResponse = await authService.addRoletoDB(roleData);
+      res.status(serviceResponse.code).json(serviceResponse);
+    } catch (error) {
+      const errorMessage = `Error adding role to DB: ${
+        (error as Error).message
+      }`;
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        status: ResponseStatus.Failed,
+        message: errorMessage,
+        data: null,
+      });
+    }
+  },
 
-    async addAdmintoDB(req: Request, res: Response) {
-        const adminData: User = req.body;
-        console.log("check data", adminData);
-        try {
-          const serviceResponse = await authService.addAdmintoDB(adminData);
-          res.status(StatusCodes.CREATED).json(serviceResponse);
-        } catch (error) {
-          const errorMessage = `Error creating admin: ${
-            (error as Error).message
-          }`;
+  async addAdmintoDB(req: Request, res: Response) {
+    const adminData: User = req.body;
+    console.log("check data", adminData);
+    try {
+      const serviceResponse = await authService.addAdmintoDB(adminData);
+      res.status(StatusCodes.CREATED).json(serviceResponse);
+    } catch (error) {
+      const errorMessage = `Error creating admin: ${(error as Error).message}`;
 
-          res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-            status: ResponseStatus.Failed,
-            message: errorMessage,
-            data: null,
-          });
-        }},
-    async createPost(req: Request, res: Response) {
-        
-        try {
-          const postData = req.body;
-          console.log("check data", postData);
-          const serviceResponse = await authService.createPost(postData);
-          res.status(StatusCodes.CREATED).json(serviceResponse);
-        } catch (error) {
-          const errorMessage = `Error creating post: ${
-            (error as Error).message
-          }`;
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        status: ResponseStatus.Failed,
+        message: errorMessage,
+        data: null,
+      });
+    }
+  },
+  async createPost(req: Request, res: Response) {
+    try {
+      const postData = req.body;
+      // const postData = {req.body.title, req.body.content, req.body.user.userId};
+      console.log("check data", postData);
+      const serviceResponse = await authService.createPost(postData);
+      res.status(StatusCodes.CREATED).json(serviceResponse);
+    } catch (error) {
+      const errorMessage = `Error creating post: ${(error as Error).message}`;
 
-          res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-            status: ResponseStatus.Failed,
-            message: errorMessage,
-            data: null,
-          });
-        }}
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        status: ResponseStatus.Failed,
+        message: errorMessage,
+        data: null,
+      });
+    }
+  },
+  async addPermissiontoRole(req: Request, res: Response) {
+    try {
+      const permissionData = req.body; //data type [] if value passing is array, need destructuring
+      console.log(permissionData);
+      const serviceResponse = await authService.addPermissiontoRole(
+        permissionData
+      );
+      res.status(serviceResponse.code).json(serviceResponse);
+    } catch (error) {
+      const errorMessage = `Error adding permission to role: ${
+        (error as Error).message
+      }`;
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        status: ResponseStatus.Failed,
+        message: errorMessage,
+        data: null,
+      });
+    }
+  },
+  async updateRoletoUser(req: Request, res: Response) {
+    try {
+      const roleData = req.body; //data type [] if value passing is array, need destructuring
+      console.log(roleData);
+      const serviceResponse = await authService.updateRoletoUser(roleData);
+      res.status(serviceResponse.code).json(serviceResponse);
+    } catch (error) {
+      const errorMessage = `Error updating role to user: ${
+        (error as Error).message
+      }`;
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        status: ResponseStatus.Failed,
+        message: errorMessage,
+        data: null,
+      });
+    }
+  },
+
+  async deleteUser(req: Request, res: Response) {
+    try {
+      const userId = req.body.userId;
+      console.log(userId);
+      const serviceResponse = await authService.deleteUser(userId);
+      res.status(serviceResponse.code).json(serviceResponse);
+    } catch (error) {
+      const errorMessage = `Error deleting user: ${(error as Error).message}`;
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        status: ResponseStatus.Failed,
+        message: errorMessage,
+        data: null,
+      });
+    }
+  },
 };
